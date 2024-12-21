@@ -15,10 +15,10 @@ export function debounce(fn, delay) {
 
 export function removeProp(obj, prop) {
     if (prop instanceof Array) {
-        let _rest;
+        let _rest = obj;
 
         prop.forEach(_prop => {
-            _rest = removeProp(obj, _prop)
+            _rest = removeProp(_rest, _prop)
         })
 
         return _rest
