@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Company\StoreRequest;
+use App\Http\Requests\Company\UpdateRequest;
 use App\Http\Resources\CompanyResource;
 use App\Models\Company;
 use App\Services\CompanyService;
@@ -43,15 +44,19 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        //
+        return response()->json([
+            'data' => new CompanyResource($company),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Company $company)
+    public function update(UpdateRequest $request, Company $company)
     {
-        //
+        $this->companyService->update($company, $request->validated());
+
+        return to_route('manage.company.index');
     }
 
     /**

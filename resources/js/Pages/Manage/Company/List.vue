@@ -6,9 +6,11 @@ import AjaxTable from "@/Components/Table/AjaxTable.vue";
 import CreateModal from "@/Pages/Manage/Company/CreateModal.vue";
 import {ref, toRaw} from "vue";
 import {notification} from "ant-design-vue";
+import UpdateModal from "@/Pages/Manage/Company/UpdateModal.vue";
 
 const tableRef = ref()
 const createFormRef = ref()
+const updateFormRef = ref()
 const deleteConfirm = {
     record: ref(),
     open: ref(false),
@@ -102,7 +104,9 @@ const tableProps = {
                     class: "p-0 mr-5",
                     enabled: (record) => !record.has_employees,
                     onClick: (e, record) => {
-                        console.log(record)
+                        if (!record) return;
+
+                        updateFormRef.value.openModal(record.id)
                     }
                 },
                 {
@@ -148,6 +152,7 @@ const reFetchTable = () => {
         </div>
 
         <CreateModal ref="createFormRef" @submitted="() => reFetchTable()"/>
+        <UpdateModal ref="updateFormRef" @submitted="() => reFetchTable()"/>
 
         <a-modal
             v-model:open="deleteConfirm.open.value"
