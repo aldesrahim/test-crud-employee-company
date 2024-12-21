@@ -146,28 +146,21 @@ defineExpose({
         </template>
 
         <template #bodyCell="{text, record, index, column}">
-            <template v-for="col in attributes.rowNumberColumns">
+            <template v-for="col in columns">
                 <template v-if="col.key === column.key">
-                    {{ index + 1 + tablePagination.offset }}
-                </template>
-            </template>
+                    <template v-if="col.rowNumber">{{ index + 1 + tablePagination.offset }}</template>
 
-            <template v-for="col in attributes.imageColumns">
-                <template v-if="col.key === column.key">
                     <a-avatar
-                        v-bind="removeProp(col.image, 'src')"
+                        v-if="col.image"
                         :src="typeof col.image.src === 'function' ? col.image.src(record) : col.image.src"
+                        v-bind="removeProp(col.image, 'src')"
                     />
-                </template>
-            </template>
 
-            <template v-for="col in attributes.actionColumns">
-                <template v-if="col.key === column.key">
-                    <template v-for="action in col.actions">
+                    <template v-if="col.actions" v-for="action in col.actions">
                         <a-button
-                            v-bind="removeProp(action, ['href', 'enabled'])"
-                            v-show="typeof action.enabled === 'function' ? action.enabled(record) : action.enabled"
+                            v-show="typeof action.enabled === 'function' ? action.enabled(record) : (action.enabled ?? true)"
                             :href="typeof action.href === 'function' ? action.href(record) : action.href"
+                            v-bind="removeProp(action, ['href', 'enabled'])"
                             @click="action.onClick($event, record)"
                         >
                             {{ action.text ?? text }}
