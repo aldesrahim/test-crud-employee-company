@@ -76,7 +76,7 @@ let tableFilters = {}
 let tableSorter = null
 
 const getSortString = () => {
-    if (!tableSorter.field) return "";
+    if (!tableSorter?.field) return "";
 
     const prefix = tableSorter.order === "ascend" ? "" : "-";
     return `${prefix}${tableSorter.field}`;
@@ -122,6 +122,10 @@ const resetSearchFilter = (clearFilters) => {
     reFetch();
 };
 
+defineExpose({
+    reFetch,
+})
+
 </script>
 
 <template>
@@ -161,7 +165,8 @@ const resetSearchFilter = (clearFilters) => {
                 <template v-if="col.key === column.key">
                     <template v-for="action in col.actions">
                         <a-button
-                            v-bind="removeProp(action, 'href')"
+                            v-bind="removeProp(action, ['href', 'enabled'])"
+                            v-show="typeof action.enabled === 'function' ? action.enabled(record) : action.enabled"
                             :href="typeof action.href === 'function' ? action.href(record) : action.href"
                             @click="action.onClick($event, record)"
                         >
