@@ -20,7 +20,8 @@ class CompanyService
             ])
             ->withExists('employees')
             ->allowedSorts($columns)
-            ->defaultSorts(['-created_at', 'id'])
+            ->defaultSorts('-created_at')
+            ->orderBy('id')
             ->jsonPaginate();
     }
 
