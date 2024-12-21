@@ -14,7 +14,17 @@ export function debounce(fn, delay) {
 }
 
 export function removeProp(obj, prop) {
-    if (!obj[prop]) return obj
+    if (prop instanceof Array) {
+        let _rest;
+
+        prop.forEach(_prop => {
+            _rest = removeProp(obj, _prop)
+        })
+
+        return _rest
+    }
+
+    if (!obj || !obj[prop]) return obj
 
     const {[prop]: _, ...rest} = obj
     return rest
