@@ -2,6 +2,7 @@
 import {computed} from "vue";
 import {useRequest} from "vue-request";
 import Filter from "@/Components/Table/Filter.vue";
+import {removeProp} from "@/helpers.js";
 
 const props = defineProps({
     apiEndpoint: {
@@ -25,29 +26,32 @@ const processedColumns = computed(() => props.columns.map(col => ({
 })));
 
 const attributes = computed(() => {
-    let hasCustomFilter = null;
-    let rowNumberColumns = [];
-    let actionColumns = [];
+    const props = {
+        hasCustomFilter: null,
+        rowNumberColumns: [],
+        actionColumns: [],
+        imageColumns: [],
+    }
 
     processedColumns.value.forEach(col => {
         if (col.customFilterDropdown !== false) {
-            hasCustomFilter = true
+            props.hasCustomFilter = true
         }
 
         if (col.rowNumber) {
-            rowNumberColumns.push(col)
+            props.rowNumberColumns.push(col)
         }
 
         if (col.actions) {
-            actionColumns.push(col)
+            props.actionColumns.push(col)
+        }
+
+        if (col.image) {
+            props.imageColumns.push(col)
         }
     })
 
-    return {
-        hasCustomFilter,
-        rowNumberColumns,
-        actionColumns,
-    }
+    return props
 })
 
 const {data, loading, run} = useRequest(params => window.axios(props.apiEndpoint, {params, responseType: 'json'}), {
@@ -144,10 +148,23 @@ const resetSearchFilter = (clearFilters) => {
                 </template>
             </template>
 
+            <template v-for="col in attributes.imageColumns">
+                <template v-if="col.key === column.key">
+                    <a-avatar
+                        v-bind="removeProp(col.image, 'src')"
+                        :src="typeof col.image.src === 'function' ? col.image.src(record) : col.image.src"
+                    />
+                </template>
+            </template>
+
             <template v-for="col in attributes.actionColumns">
                 <template v-if="col.key === column.key">
                     <template v-for="action in col.actions">
-                        <a-button v-bind="action" @click="action.onClick($event, record)">
+                        <a-button
+                            v-bind="removeProp(action, 'href')"
+                            :href="typeof action.href === 'function' ? action.href(record) : action.href"
+                            @click="action.onClick($event, record)"
+                        >
                             {{ action.text ?? text }}
                         </a-button>
                     </template>
