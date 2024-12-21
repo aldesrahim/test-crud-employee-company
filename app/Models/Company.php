@@ -28,9 +28,16 @@ class Company extends Model
 
     protected function logoUrl(): Attribute
     {
-        return Attribute::get(
-            fn ($value, array $attributes) => Storage::disk($attributes['logo_disk'])->url($attributes['logo_path'])
-        );
+        return Attribute::get(function ($value, array $attributes) {
+            $attributes['logo_disk'] ??= null;
+            $attributes['logo_path'] ??= null;
+
+            if ($attributes['logo_disk'] && $attributes['logo_path']) {
+                return Storage::disk($attributes['logo_disk'])->url($attributes['logo_path']);
+            }
+
+            return 'https://ui-avatars.com/api/?background=random&name='.urlencode($attributes['name']);
+        });
     }
 
     public function employees(): HasMany
