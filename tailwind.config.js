@@ -10,7 +10,9 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
     ],
-
+    corePlugins: {
+        preflight: false,
+    },
     theme: {
         extend: {
             fontFamily: {
