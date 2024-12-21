@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Company\StoreRequest;
+use App\Http\Resources\CompanyResource;
 use App\Models\Company;
 use App\Services\CompanyService;
 use Illuminate\Http\Request;
@@ -19,7 +21,8 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
         if ($request->expectsJson()) {
-            return $this->companyService->get();
+            return $this->companyService->get()
+                ->through(fn (Company $company) => new CompanyResource($company));
         }
 
         return Inertia::render('Manage/Company/List');
@@ -28,9 +31,11 @@ class CompanyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        $this->companyService->create($request->validated());
+
+        return to_route('manage.company.index');
     }
 
     /**
@@ -54,6 +59,8 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+        $this->companyService->delete($company);
+
+        return to_route('manage.company.index');
     }
 }
