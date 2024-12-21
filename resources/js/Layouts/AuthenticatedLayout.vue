@@ -1,11 +1,11 @@
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import {Link} from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -38,6 +38,22 @@ const showingNavigationDropdown = ref(false);
                                     :active="route().current('dashboard')"
                                 >
                                     Dashboard
+                                </NavLink>
+
+                                <NavLink
+                                    v-if="$page.props.auth.user.is_admin"
+                                    :href="route('manage.company.index')"
+                                    :active="route().current('manage.company.index')"
+                                >
+                                    Companies
+                                </NavLink>
+
+                                <NavLink
+                                    v-if="$page.props.auth.user.is_admin"
+                                    :href="route('manage.employee.index')"
+                                    :active="route().current('manage.employee.index')"
+                                >
+                                    Employees
                                 </NavLink>
                             </div>
                         </div>
@@ -145,6 +161,22 @@ const showingNavigationDropdown = ref(false);
                             :active="route().current('dashboard')"
                         >
                             Dashboard
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            v-if="$page.props.auth.user.is_admin"
+                            :href="route('manage.company.index')"
+                            :active="route().current('manage.company.index')"
+                        >
+                            Companies
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink
+                            v-if="$page.props.auth.user.is_admin"
+                            :href="route('manage.employee.index')"
+                            :active="route().current('manage.employee.index')"
+                        >
+                            Employees
                         </ResponsiveNavLink>
                     </div>
 
