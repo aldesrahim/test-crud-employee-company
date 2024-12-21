@@ -117,7 +117,7 @@ defineExpose({
 <template>
     <a-modal
         v-model:open="open"
-        title="Create Company"
+        title="Update Company"
         :footer="null"
         @cancel="resetForm"
     >
